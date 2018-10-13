@@ -1,5 +1,28 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>HELLO </h1>
+{#    {% if question_list %}#}
+        {% for question in question_list %}
+            <div class="card">
+                <div class="card-header">
+{#                    <h1>{{ question.title }}</h1>#}
+                    <h1>HELLO</h1>
+                </div>
+                <div class="card-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-2">
+                                <p>todo</p>
+                            </div>
+                            <div class="col-8">
+                                <p>q'fiojaw;ofijaw;oijdfa;owjnf;oaiw;foijaw;oih</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+{#    {% else %}#}
+{#        <h1>NO QUESTIONS AVAILABLE</h1>#}
+{#    {% endif %}#}
 {% endblock %}
