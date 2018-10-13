@@ -3,8 +3,8 @@ from faker import Faker
 
 fake = Faker()
 
-class QuestionListView(TemplateView):
-    template_name = 'questions/question_list.html'
+class IndexView(TemplateView):
+    template_name = 'index.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
