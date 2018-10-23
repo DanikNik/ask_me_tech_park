@@ -1,0 +1,53 @@
+{% extends "registration/base.html" %}
+{% block title %}REGISTER{% endblock %}
+{% block registration %}
+    {#    <form action="" method="post">#}
+    {#      {% csrf_token %}#}
+    {#      {{ form.as_p }}#}
+    {#      <button type="submit">REGISTER</button>#}
+    {#    </form>#}
+    <h1>Registration</h1>
+    <form action="" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <div class="control has-icons-left">
+                <input class="input" type="text" name="username" maxlength="150" aria-describedby="userHelp"
+                       id="id_username" placeholder="Username" required="">
+                <small id='userHelp' class="form-text text-muted">Required. 150 characters or fewer. Letters, digits and
+                    @ . + - _ only.
+                </small>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="control has-icons-left">
+                <input class="input" type="password" name="password1" required="" id="id_password1"
+                       aria-describedby="passHelp" placeholder="Password">
+                <ul id="passHelp">
+                    <li>
+                        <small class="form-text text-muted">Your password can't be too similar to your other personal
+                            information.
+                        </small>
+                    </li>
+                    <li>
+                        <small class="form-text text-muted">Your password must contain at least 8 characters.</small>
+                    </li>
+                    <li>
+                        <small class="form-text text-muted">Your password can't be a commonly used password.</small>
+                    </li>
+                    <li>
+                        <small class="form-text text-muted">Your password can't be entirely numeric.</small>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="form-group">
+            <input class="input" type="password" name="password2" required="" id="id_password2"
+                   placeholder="Password confirmation" aria-describedby="passConfHelp">
+            <small id="passConfHelp" class="form-text text-muted">Enter the same password as before, for verification.</small>
+        </div>
+        <button class="btn btn-outline-dark" type="submit">REGISTER</button>
+
+    </form>
+{% endblock %}
+
+

@@ -9,36 +9,40 @@
 
 {% block content %}
     {#    {% if question_list %}#}
-            {% for question in question_list %}
-    <div class="card mx-auto my-2">
-        <div class="card-header">
-            <h3>QUESTION TITLE</h3>
-        </div>
-        <div class="card-body">
-            <div class="container-fluid">
-                <div class="row mb-2">
-                    <div class="col-2">
-                        <img src="{% static 'img/placeholder_64x64.png' %} ">
-                    </div>
-                    <div class="col-8">
-                        <p>Lorem ipsum — dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod
-                            tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis
-                            nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo ...</p>
-                        <a href="#">Read more...</a>
+    {% for question in question_list %}
+        <div class="card mx-auto mb-2">
+            <div class="card-header">
+                <h3>QUESTION TITLE</h3>
+            </div>
+            <div class="card-body">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-2">
+                            <img src="{% static 'img/placeholder_64x64.png' %} ">
+                        </div>
+                        <div class="col-8">
+                            <p>Lorem ipsum — dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod
+                                tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam,
+                                quis
+                                nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo
+                                ...</p>
+                            <a href="#">Read more...</a>
+                        </div>
                     </div>
                 </div>
-                <div class="card-footer">
-                    <div class="row">
-                        <div class="col-2">
-                            <form action="" class="form-group">
-                                <div class="form-row align-items-center">
-                                    <button class="btn btn-outline-dark mx-1">+</button>
-                                    <button class="btn btn-outline-dark mx-1">-</button>
-                                </div>
-                            </form>
-                        </div>
+            </div>
+            <div class="card-footer">
+                <div class="row">
+                    <div class="col-2">
+                        <form action="" class="form-group">
+                            <div class="form-row align-items-center">
+                                <button class="btn btn-outline-dark mx-1" href="#">+</button>
+                                <button class="btn btn-outline-dark mx-1" href="#">-</button>
+                            </div>
+                        </form>
+                    </div>
 
-                        <div class="col-8">
+                    <div class="col-8">
                             <span>Tags:
                                 <a href="#">qwe</a>
                                 <a href="#">asd</a>
@@ -46,13 +50,12 @@
                                 <a href="#">rty</a>
                                 <a href="#">dfg</a>
                             </span>
-                        </div>
                     </div>
+
                 </div>
             </div>
         </div>
-    </div>
-            {% endfor %}
+    {% endfor %}
     {#    {% else %}#}
     {#        <h1>NO QUESTIONS AVAILABLE</h1>#}
     {#    {% endif %}#}
