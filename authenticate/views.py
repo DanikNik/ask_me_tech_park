@@ -2,6 +2,7 @@ from django.views.generic.edit import FormView
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 
+
 class RegisterFormView(FormView):
     form_class = UserCreationForm
 

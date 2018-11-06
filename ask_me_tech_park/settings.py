@@ -128,3 +128,5 @@ STATICFILES_DIRS = [
     '/var/www/static/',
 ]
 
+
+LOGIN_REDIRECT_URL = '/'
