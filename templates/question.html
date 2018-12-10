@@ -1,0 +1,40 @@
+{% load static %}
+
+<div class="card mx-auto mb-2">
+    <div class="card-header">
+        <a href="{{ question.get_absolute_url }}"><h3>{{ question.title }}</h3></a>
+    </div>
+    <div class="card-body">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-2">
+                    <img src="{% static 'img/placeholder_64x64.png' %} ">
+                </div>
+                <div class="col-8">
+                    <p>{{ question.text }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <div class="row">
+            <div class="col-3">
+                {% if request.user.is_authenticated %}
+                    <div class="container-fluid">
+                        <a href="#"><i class="material-icons">thumb_up_alt</i></a>
+                        <span> {{ question.rating }} </span>
+                        <a href="#"><i class="material-icons">thumb_down_alt</i></a>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="col-8">
+                <span>Tags:
+                    {% for tag in question.tags.all %}
+                        <a href="{% url 'question_by_tag' tag %}">{{ tag }}</a>
+                    {% endfor %}
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

@@ -2,71 +2,20 @@
 {% load static %}
 
 {% block content %}
-    <div class="card mx-auto mb-2">
-        <div class="card-header">
-            <h3>{{ question.title }}</h3>
-        </div>
-        <div class="card-body">
-            <div class="container-fluid">
-                <div class="row mb-2">
-                    <div class="col-2">
-                        <img src="{% static 'img/placeholder_64x64.png' %} ">
-                    </div>
-                    <div class="col-8">
-                        <p>{{ question.text }}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card-footer">
-            <div class="row">
-                <div class="col-2">
-                    <form action="" class="form-group">
-                        <div class="form-row align-items-center">
-                            <button class="btn btn-outline-dark mx-1" href="#">+</button>
-                            <button class="btn btn-outline-dark mx-1" href="#">-</button>
-                        </div>
-                    </form>
-                </div>
-
-                <div class="col-8">
-                            <span>Tags:
-                                {% for tag in tag_list %}
-                                    <a href="#">{{ tag }}</a>
-                                {% endfor %}
-                            </span>
-                </div>
-            </div>
-        </div>
-    </div>
+    {% include "question.html" %}
     <br>
-    <form method="post" class="form-group">
-        {% csrf_token %}
-        <input type="text" class="form-control mb-2" placeholder="Enter your answer here:">
-        <button class="btn btn-dark">Answer</button>
-    </form>
-    {% if question.answer_set %}
-        {% for answer in question.answer_set.all %}
-            <div class="card">
-                <div class="card-body">{{ answer.text }}</div>
-                <div class="card-footer">
-                    <div class="row">
-                        <div class="col-2">
-                            <form action="" class="form-group">
-                                <div class="form-row align-items-center">
-                                    <button class="btn btn-outline-dark mx-1" href="#">+</button>
-                                    <button class="btn btn-outline-dark mx-1" href="#">-</button>
-                                </div>
-                            </form>
-                        </div>
-
-                        <div class="col-8">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
-    {% else %}
-        <h3>No answers yet.</h3>
+    {% if request.user.is_authenticated %}
+        <form method="post" class="form-group">
+            {% csrf_token %}
+{#            <input type="text" class="form-control mb-2" placeholder="Enter your answer here:">#}
+            {{ form.as_p}}
+            <button class="btn btn-dark">Answer</button>
+        </form>
     {% endif %}
+    {% for answer in question.answer_set.all %}
+        {% include 'answer.html' %}
+    {% empty %}
+        <h3>No answers yet. Be First!</h3>
+    {% endfor %}
 {% endblock %}
+

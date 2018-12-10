@@ -8,52 +8,55 @@
 
 
 {% block content %}
-    {#    {% if question_list %}#}
-    {% for question in question_list %}
-        <div class="card mx-auto mb-2">
-            <div class="card-header">
-                <h3>{{ question.title }}</h3>
-            </div>
-            <div class="card-body">
-                <div class="container-fluid">
-                    <div class="row mb-2">
-                        <div class="col-2">
-                            <img src="{% static 'img/placeholder_64x64.png' %} ">
-                        </div>
-                        <div class="col-8">
-                            <p>{{ question.text }}</p>
-                            <a href="{{ question.get_absolute_url }}">Read more...</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card-footer">
-                <div class="row">
-                    <div class="col-2">
-                        <form action="" class="form-group">
-                            <div class="form-row align-items-center">
-                                <button class="btn btn-outline-dark mx-1" href="#">+</button>
-                                <button class="btn btn-outline-dark mx-1" href="#">-</button>
-                            </div>
-                        </form>
-                    </div>
+    {% if question_list %}
+        {% for question in question_list %}
+{#            <div class="card mx-auto mb-2">#}
+{#                <div class="card-header">#}
+{#                    <a href="{{ question.get_absolute_url }}"><h3>{{ question.title }}</h3></a>#}
+{#                </div>#}
+{#                <div class="card-body">#}
+{#                    <div class="container-fluid">#}
+{#                        <div class="row mb-2">#}
+{#                            <div class="col-2">#}
+{#                                <img src="{% static 'img/placeholder_64x64.png' %} ">#}
+{#                            </div>#}
+{#                            <div class="col-8">#}
+{#                                <p>{{ question.text }}</p>#}
+{#                                <a href="{{ question.get_absolute_url }}">Read more...</a>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="card-footer">#}
+{#                    <div class="row">#}
+{#                        <div class="col-3">#}
+{#                            <form action="" class="form-group">#}
+{#                                <div class="form-row align-items-center">#}
+{#                                    <button class="btn btn-outline-dark mx-1 " href="#">+</button>#}
+{#                                    <span> {{ question.rating }} </span>#}
+{#                                    <button class="btn btn-outline-dark mx-1 " href="#">-</button>#}
+{#                                </div>#}
+{#                            </form>#}
+{#                        </div>#}
+{##}
+{#                        <div class="col-8">#}
+{#                            <span>Tags:#}
+{#                                {% for tag in question.tags.all %}#}
+{#                                    <a href="{% url 'question_list' %}?tag={{ tag }}">{{ tag }}</a>#}
+{#                                {% endfor %}#}
+{#                            </span>#}
+{#                        </div>#}
+{##}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+            {% include "question.html" %}
+        {% endfor %}
 
-                    <div class="col-8">
-                            <span>Tags:
-                                <a href="#">qwe</a>
-                                <a href="#">asd</a>
-                                <a href="#">zxc</a>
-                                <a href="#">rty</a>
-                                <a href="#">dfg</a>
-                            </span>
-                    </div>
+        {% include "paginator.html" %}
 
-                </div>
-            </div>
-        </div>
-    {% endfor %}
-    {#    {% else %}#}
-    {#        <h1>NO QUESTIONS AVAILABLE</h1>#}
-    {#    {% endif %}#}
+    {% else %}
+        <h1>NO QUESTIONS AVAILABLE</h1>
+    {% endif %}
 {% endblock %}
 

@@ -3,15 +3,36 @@
 <head>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <meta charset="UTF-8">
     <title>{% block title %}Title {% endblock %}</title>
-    {% block style %}
-    {% endblock %}
+    {#    {% block style %}#}
+    {#        <style>#}
+    {#        a:link {#}
+    {#        color: black;#}
+    {#        }#}
+    {##}
+    {#        /* visited link */#}
+    {#        a:visited {#}
+    {#        color: black;#}
+    {#        }#}
+    {##}
+    {#        /* mouse over link */#}
+    {#        a:hover {#}
+    {#        color: black;#}
+    {#        }#}
+    {##}
+    {#        /* selected link */#}
+    {#        a:active {#}
+    {#        color: black;#}
+    {#        }#}
+    {#        </style>#}
+    {#    {% endblock %}#}
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-        <a class="navbar-brand" href="{% url 'index' %}">AskMe</a>
+        <a class="navbar-brand" href="{% url 'question_list' %}">AskMe</a>
         <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarsExample07"
                 aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -19,11 +40,9 @@
         <div class="navbar-collapse collapse" id="navbarsExample07" style="">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="btn btn-outline-success" href="{% url 'question_create' %}"> ASK <span class="sr-only">(current)</span>
+                    <a class="btn
+                    btn-outline-success" href="{% url 'question_create' %}"> ASK <span class="sr-only">(current)</span>
                     </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'question_list' %}">Questions</a>
                 </li>
             </ul>
 
@@ -35,7 +54,7 @@
                 <ul class="navbar-nav mr-auto">
                     {% if request.user.is_authenticated %}
                         <li class="nav-item">
-                            <a href="#" class="nav-link">{{ user.username }}</a>
+                            <a href="{% url 'user_settings' %}" class="nav-link">{{ user.username }}</a>
                         </li>
                         <li class="nav-item">
                             <a href="{% url 'logout' %}" class="nav-link">Logout</a>
@@ -62,44 +81,46 @@
         </div>
         <div class="col-4">
             {% block rightbar %}
-                <div class="card mb-2 sticky-top">
-                    <div class="card-header">
-                        <h3>Popular tags</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="card-text">
-                            {% for tag in tag_list %}
-                                <a href="#">{{ tag }}</a>
-                            {% endfor %}
+                <div class="container-fluid sticky-top">
+                    <div class="card mb-2">
+                        <div class="card-header">
+                            <h3>Popular tags</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-text">
+                                {% for tag in tag_list %}
+                                    <a href="{% url 'question_by_tag' tag %}">{{ tag }}</a>
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Best members</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="card-text">
-                            <ul>
-                                <li>
-                                    <a href="#">User 1</a>
-                                </li>
-                                <li>
-                                    <a href="#">User 2</a>
-                                </li>
-                                <li>
-                                    <a href="#">User 3</a>
-                                </li>
-                                <li>
-                                    <a href="#">User 4</a>
-                                </li>
-                                <li>
-                                    <a href="#">User 5</a>
-                                </li>
-                                <li>
-                                    <a href="#">User 6</a>
-                                </li>
-                            </ul>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Best members</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-text">
+                                <ul>
+                                    <li>
+                                        <a href="#">User 1</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">User 2</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">User 3</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">User 4</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">User 5</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">User 6</a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>

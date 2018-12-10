@@ -1,4 +1,4 @@
-#! /usr/bin/env python3
+#! venv//bin/python
 
 import sys
 import os
@@ -11,28 +11,51 @@ django.setup()
 
 print('[+] Set up environment')
 
+# from yourapp.models import your_model
 # from account.models import Person
 from questions.models import Question, Tag
 from django.contrib.auth.models import User
+from faker import Faker
+from random import randint
 
-alphabet = ['alpha', 'beta', 'gamma', 'delta', 'kappa']
+fake = Faker()
 admin = User.objects.create_superuser(username='admin', password='admin', email='root@admin.com')
 admin.save()
 # Person.objects.create(name='ADMIN', surname='ADMIN', nickname='ADMIN', user=admin)
 print('[+] Created superuser')
-for i in range(5):
-    # us = User.objects.create_user(username='user{}'.format(alphabet[i]), password='pass')
+
+count = 0
+for i in range(20):
+    try:
+        tag = Tag.objects.create(text=fake.word())
+        tag.save()
+        print('[+] Created tag {}'.format(tag.text))
+        count += 1
+    except:
+        pass
+
+for i in range(100):
+    # us = User.objects.create_user(username='user_{}'.format(i), password='pass')
     # us.save()
     # print('[+] Created user {}'.format(us.username))
-    # person = Person.objects.create(name='Person', surname=alphabet[i].capitalize(), nickname="Person_{}".format(alphabet[i]),
-    #                       user=us)
+    # cred = fake.name().split()
+    # person = Person.objects.create(name=cred[0], surname=cred[1], nickname=fake.user_name(),
+    #                                user=us)
     # person.save()
     # print('[+] Created person {}'.format(person.nickname))
 
-    tag = Tag.objects.create(text=alphabet[i])
-    tag.save()
-    print('[+] Created tag {}'.format(tag.text))
-    q = Question.objects.create(title="Question {}".format(alphabet[i]),
-                                text="Question #{} descr".format(alphabet[i]))
+    q = Question.objects.create(title=fake.sentence(),
+                                text=' '.join(fake.sentences()), rating=randint(0, 20))
+
+    taglist = []
+
+    for j in range(3):
+        r = randint(0, count - 1)
+        # print(r)
+        taglist.append(list(Tag.objects.all())[r])
+
+    # print(taglist)
+    q.tags.set(taglist)
     q.save()
+
     print('[+] Created question {}'.format(q.title))
