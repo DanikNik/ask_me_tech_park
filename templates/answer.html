@@ -5,9 +5,9 @@
         <div class="row">
             <div class="col-5">
                 <div class="container-fluid">
-                    <a href="#"><i class="material-icons">thumb_up_alt</i></a>
-                    <span> {{ answer.rating }} </span>
-                    <a href="#"><i class="material-icons">thumb_down_alt</i></a>
+                    <a onclick="rateAnswer({{ answer.id }}, 1)"><i class="material-icons">thumb_up_alt</i></a>
+                    <span id="a-rating-{{ answer.id }}"> {{ answer.rating }} </span>
+                    <a onclick="rateAnswer({{ answer.id }}, -1)"><i class="material-icons">thumb_down_alt</i></a>
                 </div>
             </div>
             <div class="col-8">

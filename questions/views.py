@@ -1,8 +1,9 @@
 from django.views.generic import ListView, DetailView
-from django.views.generic.edit import CreateView, FormMixin
+from django.views.generic.edit import FormView, FormMixin
 from faker import Faker
+from django.http import JsonResponse, HttpResponse
 
-from questions.models import Question, Tag, Answer
+from questions.models import Question, Tag, Answer, QuestionCreationForm, AnswerForm
 from . import models
 
 fake = Faker()
@@ -52,11 +53,10 @@ class QuestionDetailView(DetailView, FormMixin):
     model = models.Question
 
     context_object_name = 'question'
-    form_class = models.AnswerForm
+    form_class = AnswerForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-        # context['question'] = self.object
         context['tag_list'] = Tag.objects.all()
         return context
 
@@ -77,19 +77,42 @@ class QuestionDetailView(DetailView, FormMixin):
             return self.form_invalid(form)
 
 
-class QuestionCreateView(CreateView):
+class QuestionCreateView(FormView):
     template_name = 'questions/question_create.html'
-    model = models.Question
-    fields = [
-        'title',
-        'text',
-        'tags'
-    ]
+
+    form_class = QuestionCreationForm
 
     def form_valid(self, form):
-        question = form.save(commit=False)
+        question = Question.objects.create(title=form.cleaned_data['title'],
+                                           text=form.cleaned_data['text'])
+        question.tags.set(form.cleaned_data['tags'])
         question.author = self.request.user
         question.rating = 0
         question.save()
+        self.success_url = question.get_absolute_url()
 
         return super(QuestionCreateView, self).form_valid(form)
+
+
+def rate_question(request):
+    question_id = int(request.POST['id'])
+    value = int(request.POST['value'])
+    question = Question.objects.get(id=question_id)
+    question.rating += value
+    question.save()
+
+    # проверка на статус заебись
+    # нет проверки на статус заебись
+    return HttpResponse(question.rating, status=200)
+
+
+def rate_answer(request):
+    answer_id = int(request.POST['id'])
+    value = int(request.POST['value'])
+    answer = Answer.objects.get(id=answer_id)
+    answer.rating += value
+    answer.save()
+
+    # проверка на статус заебись
+    # нет проверки на статус заебись
+    return HttpResponse(answer.rating, status=200)

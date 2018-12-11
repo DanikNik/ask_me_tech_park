@@ -2,32 +2,13 @@
 <html lang="en">
 <head>
     {% load static %}
+
     <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <meta charset="UTF-8">
     <title>{% block title %}Title {% endblock %}</title>
-    {#    {% block style %}#}
-    {#        <style>#}
-    {#        a:link {#}
-    {#        color: black;#}
-    {#        }#}
-    {##}
-    {#        /* visited link */#}
-    {#        a:visited {#}
-    {#        color: black;#}
-    {#        }#}
-    {##}
-    {#        /* mouse over link */#}
-    {#        a:hover {#}
-    {#        color: black;#}
-    {#        }#}
-    {##}
-    {#        /* selected link */#}
-    {#        a:active {#}
-    {#        color: black;#}
-    {#        }#}
-    {#        </style>#}
-    {#    {% endblock %}#}
+    {% block style %}
+    {% endblock %}
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -73,6 +54,7 @@
     </div>
 </nav>
 <div class="container my-5">
+    {% csrf_token %}
     {% block page_title %}{% endblock %}
     <div class="row mt-3">
         <div class="col-8">
@@ -128,5 +110,53 @@
         </div>
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+{% block javascript %}
+    <script>
+        function rateQuestion(id, value) {
+            let data = new FormData();
+            data.append('id', id);
+            data.append('value', value);
+            data.append('csrfmiddlewaretoken', document.getElementsByName('csrfmiddlewaretoken')[0].value);
+            const vote = document.getElementById('q-rating-' + id);
+            fetch('/rate_question/', {
+                method: 'POST',
+                body: data,
+                credentials: 'same-origin'
+            }).then(res => {
+                if (!res.ok) {
+                    alert('sosi pisos pidor');
+                    return;
+                }
+                res.text().then(t => vote.innerHTML = t)
+            })
+        }
+
+        function rateAnswer(id, value) {
+            let data = new FormData();
+            data.append('id', id);
+            data.append('value', value);
+            data.append('csrfmiddlewaretoken', document.getElementsByName('csrfmiddlewaretoken')[0].value);
+            const vote = document.getElementById('a-rating-' + id);
+            fetch('/rate_answer/', {
+                method: 'POST',
+                body: data,
+                credentials: 'same-origin'
+            }).then(res => {
+                if (!res.ok) {
+                    alert('sosi pisos pidor');
+                    return;
+                }
+                res.text().then(t => vote.innerHTML = t)
+            })
+        }
+
+        function setCorrect(id) {
+        }
+    </script>
+{% endblock %}
 </body>
 </html>

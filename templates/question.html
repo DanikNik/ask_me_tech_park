@@ -21,9 +21,9 @@
             <div class="col-3">
                 {% if request.user.is_authenticated %}
                     <div class="container-fluid">
-                        <a href="#"><i class="material-icons">thumb_up_alt</i></a>
-                        <span> {{ question.rating }} </span>
-                        <a href="#"><i class="material-icons">thumb_down_alt</i></a>
+                        <a onclick="rateQuestion({{ question.id }}, 1)"><i class="material-icons">thumb_up_alt</i></a>
+                        <span id="q-rating-{{question.id}}"> {{ question.rating }} </span>
+                        <a onclick="rateQuestion({{ question.id }}, -1)"><i class="material-icons">thumb_down_alt</i></a>
                     </div>
                 {% endif %}
             </div>

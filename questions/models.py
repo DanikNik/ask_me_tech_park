@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 
 from django import forms
-from django.forms.models import ModelForm
+from django.contrib.admin import widgets as admin_widgets
 
 
 class Question(models.Model):
@@ -52,3 +52,13 @@ class Answer(models.Model):
 class AnswerForm(forms.Form):
     text = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control',
                                                         'placeholder': 'Enter your genious answer!'}), label='')
+
+
+class QuestionCreationForm(forms.Form):
+    title = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Title:'}), label='')
+    text = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control',
+                                                        'placeholder': 'Text of your question:'}),
+                           label='')
+    tags = forms.ModelMultipleChoiceField(widget=admin_widgets.FilteredSelectMultiple('Tags', is_stacked=False),
+                                          queryset=Tag.objects.all(),
+                                          label='Tags')
