@@ -1,10 +1,11 @@
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import FormView, FormMixin
 from faker import Faker
-from django.http import JsonResponse, HttpResponse
+from django.http import HttpResponse
 
-from questions.models import Question, Tag, Answer, QuestionCreationForm, AnswerForm
-from . import models
+from django.db import transaction
+
+from .models import Question, Tag, Answer, QuestionCreationForm, AnswerForm, QuestionLike, AnswerLike
 
 fake = Faker()
 
@@ -12,7 +13,7 @@ fake = Faker()
 class QuestionListView(ListView):
     template_name = 'questions/question_list.html'
 
-    model = models.Question
+    model = Question
     context_object_name = 'question_list'
 
     # ordering = 'title'
@@ -50,7 +51,7 @@ class QuestionByTagView(ListView):
 
 class QuestionDetailView(DetailView, FormMixin):
     template_name = 'questions/question_detail.html'
-    model = models.Question
+    model = Question
 
     context_object_name = 'question'
     form_class = AnswerForm
@@ -94,25 +95,42 @@ class QuestionCreateView(FormView):
         return super(QuestionCreateView, self).form_valid(form)
 
 
+@transaction.atomic
 def rate_question(request):
     question_id = int(request.POST['id'])
     value = int(request.POST['value'])
-    question = Question.objects.get(id=question_id)
-    question.rating += value
-    question.save()
+    _question = Question.objects.get(id=question_id)
+    _user = request.user
+    try:
+        like = QuestionLike.objects.get(question=_question, user=_user)
+    except:
+        like = None
+    if like is not None:
+        return HttpResponse(0, status=403)
+    else:
+        _question.rating += value
+        _question.liked.add(_user)
+        _question.save()
+        QuestionLike.objects.create(question=_question, user=_user)
+        return HttpResponse(_question.rating, status=200)
 
-    # проверка на статус заебись
-    # нет проверки на статус заебись
-    return HttpResponse(question.rating, status=200)
 
-
+@transaction.atomic
 def rate_answer(request):
     answer_id = int(request.POST['id'])
     value = int(request.POST['value'])
-    answer = Answer.objects.get(id=answer_id)
-    answer.rating += value
-    answer.save()
+    _answer = Answer.objects.get(id=answer_id)
+    _user = request.user
+    try:
+        like = AnswerLike.objects.get(answer=_answer, user=_user)
+    except:
+        like = None
+    if like is not None:
+        return HttpResponse(0, status=403)
+    else:
+        _answer.rating += value
+        _answer.save()
+        AnswerLike.objects.create(answer=_answer, user=_user)
+        return HttpResponse(_answer.rating, status=200)
 
-    # проверка на статус заебись
-    # нет проверки на статус заебись
-    return HttpResponse(answer.rating, status=200)
+# TODO если проголосовал то делать кнопку неактивной

@@ -1,6 +1,8 @@
 from django.views.generic.edit import FormView
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
+from django.urls import reverse
+
 
 
 class RegisterFormView(FormView):
@@ -9,11 +11,12 @@ class RegisterFormView(FormView):
     template_name = "registration/register.html"
 
     def form_valid(self, form):
-        self.user = form.save()
-        print(self.user)
-        login(self.request, self.user)
-        self.success_url = "/auth/login/"
+        user = form.save()
+        print(user)
+        login(self.request, user)
+        self.success_url = reverse("question_list")
         return super(RegisterFormView, self).form_valid(form)
+#     def form_is_valid
 
 # Create your views here.
 

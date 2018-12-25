@@ -1,0 +1,20 @@
+[Unit]
+Description = AskMe
+After = network.target
+
+[Service]
+PermissionsStartOnly = true
+PIDFile = /run/askme/askme.pid
+User = www-data
+Group = www-data
+WorkingDirectory = /home/daniknik/tech_park_web/ask_me_tech_park/
+ExecStartPre = /bin/mkdir -p /run/askme
+ExecStartPre = /bin/chown -R www-data:www-data /run/askme
+ExecStart = /home/daniknik/tech_park_web/ask_me_tech_park/venv/bin/gunicorn ask_me_tech_park.wsgi -b 127.0.0.1:8080 --pid /run/askme/askme.pid  --log-file /var/log/gunicorn/askme.log --chdir /home/daniknik/tech_park_web/ask_me_tech_park
+ExecReload = /bin/kill -s HUP $MAINPID
+ExecStop = /bin/kill -s TERM $MAINPID
+ExecStopPost = /bin/rm -rf /run/askme
+PrivateTmp = true
+
+[Install]
+WantedBy = multi-user.target

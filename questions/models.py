@@ -12,6 +12,7 @@ class Question(models.Model):
     rating = models.IntegerField(null=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     tags = models.ManyToManyField(to='Tag', related_name='questions')
+    liked = models.ManyToManyField(to=User, related_name="liked_questions")
 
     # date = models.DateTimeField(auto_created=True)
 
@@ -33,7 +34,6 @@ class Tag(models.Model):
 
 
 class Answer(models.Model):
-    # title = models.CharField(max_length=100)
     text = models.TextField()
     rating = models.IntegerField(null=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
@@ -54,11 +54,25 @@ class AnswerForm(forms.Form):
                                                         'placeholder': 'Enter your genious answer!'}), label='')
 
 
+class QuestionLike(models.Model):
+    question = models.ForeignKey(to=Question, on_delete=models.CASCADE)
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
+
+
+class AnswerLike(models.Model):
+    answer = models.ForeignKey(to=Answer, on_delete=models.CASCADE)
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
+
+
+# TODO novalidate в рендере формы валидация на стороне сервера
 class QuestionCreationForm(forms.Form):
-    title = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Title:'}), label='')
+    title = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Title:'}),
+                            label='',
+                            required=True)
     text = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control',
                                                         'placeholder': 'Text of your question:'}),
-                           label='')
-    tags = forms.ModelMultipleChoiceField(widget=admin_widgets.FilteredSelectMultiple('Tags', is_stacked=False),
+                           label='',
+                           required=True)
+    tags = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple,
                                           queryset=Tag.objects.all(),
                                           label='Tags')

@@ -1,0 +1,42 @@
+upstream memcached_upstream {
+    server 127.0.0.1:11211;
+    keepalive 20;
+}
+
+upstream askme_server{
+    server 127.0.0.1:8080;
+}
+
+proxy_cache_path /home/daniknik/tech_park_web/nginx_cache/
+                    levels=1:2
+                    keys_zone=askme_cache:10m
+                    max_size=100m
+                    inactive=60m
+                    use_temp_path=off;
+
+
+server{
+    listen 80;
+    server_name ask.me;
+
+
+    location ~* \.\w\w\w?\w?$ {
+        alias /home/daniknik/tech_park_web/ask_me_tech_park/static;
+    }
+
+    location / {
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        default_type "text/html; charset=utf8";
+
+
+        proxy_cache askme_cache;
+        proxy_cache_valid 10m;
+
+        proxy_ignore_headers "Set-Cookie";
+        proxy_hide_header "Set-Cookie";
+
+
+        proxy_pass http://askme_server;
+    }
+}

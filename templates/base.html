@@ -53,60 +53,62 @@
         </div>
     </div>
 </nav>
-<div class="container my-5">
-    {% csrf_token %}
-    {% block page_title %}{% endblock %}
-    <div class="row mt-3">
-        <div class="col-8">
+<div class="container-fluid">
+    <div class="container my-5">
+        {% csrf_token %}
+        {% block page_title %}{% endblock %}
+        <div class="row mt-3">
+            <div class="col-8">
             {% block content %}
             {% endblock %}
         </div>
-        <div class="col-4">
-            {% block rightbar %}
-                <div class="container-fluid sticky-top">
-                    <div class="card mb-2">
-                        <div class="card-header">
-                            <h3>Popular tags</h3>
+            <div class="col-4">
+                {% block rightbar %}
+                    <div class="container-fluid sticky-top">
+                        <div class="card mb-2">
+                            <div class="card-header">
+                                <h3>Popular tags</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-text">
+                                    {% for tag in tag_list %}
+                                        <a href="{% url 'question_by_tag' tag %}">{{ tag }}</a>
+                                    {% endfor %}
+                                </div>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <div class="card-text">
-                                {% for tag in tag_list %}
-                                    <a href="{% url 'question_by_tag' tag %}">{{ tag }}</a>
-                                {% endfor %}
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Best members</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-text">
+                                    <ul>
+                                        <li>
+                                            <a href="#">User 1</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">User 2</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">User 3</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">User 4</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">User 5</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">User 6</a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Best members</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="card-text">
-                                <ul>
-                                    <li>
-                                        <a href="#">User 1</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">User 2</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">User 3</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">User 4</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">User 5</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">User 6</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            {% endblock %}
+                {% endblock %}
+            </div>
         </div>
     </div>
 </div>
@@ -122,16 +124,20 @@
             data.append('value', value);
             data.append('csrfmiddlewaretoken', document.getElementsByName('csrfmiddlewaretoken')[0].value);
             const vote = document.getElementById('q-rating-' + id);
+            const like_button = document.getElementById('q-like-button-'+id);
+            const dislike_button = document.getElementById('q-dislike-button-'+id);
             fetch('/rate_question/', {
                 method: 'POST',
                 body: data,
                 credentials: 'same-origin'
             }).then(res => {
                 if (!res.ok) {
-                    alert('sosi pisos pidor');
+                    alert('You Liked This!');
                     return;
                 }
                 res.text().then(t => vote.innerHTML = t)
+                {#like_button.innerHTML = "";#}
+                {#dislike_button.innerHTML = "";#}
             })
         }
 
@@ -147,7 +153,7 @@
                 credentials: 'same-origin'
             }).then(res => {
                 if (!res.ok) {
-                    alert('sosi pisos pidor');
+                    alert('You Liked this');
                     return;
                 }
                 res.text().then(t => vote.innerHTML = t)
