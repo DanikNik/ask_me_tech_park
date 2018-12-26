@@ -1,8 +1,9 @@
+{% load question_cache %}
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    {% load static %}
-
     <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <meta charset="UTF-8">
@@ -71,7 +72,8 @@
                             </div>
                             <div class="card-body">
                                 <div class="card-text">
-                                    {% for tag in tag_list %}
+                                    {% get_best_tags as best_tags%}
+                                    {% for tag in best_tags %}
                                         <a href="{% url 'question_by_tag' tag %}">{{ tag }}</a>
                                     {% endfor %}
                                 </div>
@@ -124,8 +126,8 @@
             data.append('value', value);
             data.append('csrfmiddlewaretoken', document.getElementsByName('csrfmiddlewaretoken')[0].value);
             const vote = document.getElementById('q-rating-' + id);
-            const like_button = document.getElementById('q-like-button-'+id);
-            const dislike_button = document.getElementById('q-dislike-button-'+id);
+            const like_button = document.getElementById('q-like-button-' + id);
+            const dislike_button = document.getElementById('q-dislike-button-' + id);
             fetch('/rate_question/', {
                 method: 'POST',
                 body: data,

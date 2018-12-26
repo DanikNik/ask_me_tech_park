@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 
 from django import forms
-from django.contrib.admin import widgets as admin_widgets
 
 
 class Question(models.Model):

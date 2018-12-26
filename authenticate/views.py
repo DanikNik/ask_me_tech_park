@@ -16,19 +16,3 @@ class RegisterFormView(FormView):
         login(self.request, user)
         self.success_url = reverse("question_list")
         return super(RegisterFormView, self).form_valid(form)
-#     def form_is_valid
-
-# Create your views here.
-
-#
-# class LoginFormView(FormView):
-#     form_class = AuthenticationForm
-#
-#     template_name = "registration/login.html"
-#     success_url = '/events'
-#     def form_valid(self, form):
-#         self.user = form.get_user()
-#
-#         login(self.request, self.user)
-#         self.success_url = '/account/'+str(self.user.id)
-#         return super(LoginFormView, self).form_valid(form)

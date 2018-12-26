@@ -1,11 +1,7 @@
-upstream memcached_upstream {
-    server 127.0.0.1:11211;
-    keepalive 20;
-}
-
 upstream askme_server{
     server 127.0.0.1:8080;
 }
+
 
 proxy_cache_path /home/daniknik/tech_park_web/nginx_cache/
                     levels=1:2
@@ -16,12 +12,18 @@ proxy_cache_path /home/daniknik/tech_park_web/nginx_cache/
 
 
 server{
-    listen 80;
+    listen 81;
     server_name ask.me;
 
 
-    location ~* \.\w\w\w?\w?$ {
-        alias /home/daniknik/tech_park_web/ask_me_tech_park/static;
+    location /static/ {
+        alias /home/daniknik/tech_park_web/ask_me_tech_park/static/;
+        expires 3d;
+    }
+
+    location /media/ {
+        alias /home/daniknik/tech_park_web/ask_me_tech_park/media/;
+        expires 3d;
     }
 
     location / {
@@ -29,14 +31,28 @@ server{
         proxy_set_header X-Real-IP $remote_addr;
         default_type "text/html; charset=utf8";
 
+        proxy_pass http://askme_server;
+    }
+}
+
+server{
+
+    listen 80;
+
+
+    location / {
+        proxy_pass http://ask.me:81;
 
         proxy_cache askme_cache;
-        proxy_cache_valid 10m;
+        proxy_cache_valid 1h;
 
-        proxy_ignore_headers "Set-Cookie";
-        proxy_hide_header "Set-Cookie";
+        if ($http_cookie ~* ".+" ) {
+            set $do_not_cache 1;
+        }
 
+#        proxy_ignore_headers "Set-Cookie";
+#        proxy_hide_header "Set-Cookie";
+        proxy_cache_bypass $do_not_cache;
 
-        proxy_pass http://askme_server;
     }
 }
