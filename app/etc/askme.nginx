@@ -50,8 +50,6 @@ server{
             set $do_not_cache 1;
         }
 
-#        proxy_ignore_headers "Set-Cookie";
-#        proxy_hide_header "Set-Cookie";
         proxy_cache_bypass $do_not_cache;
 
     }
