@@ -88,15 +88,11 @@
                             <div class="card-body">
                                 <div class="card-text">
                                     {% get_best_users as best_users %}
-                                    <ul>
                                         {% for user in best_users %}
-                                            <li>
-                                                <p>{{ user }}</p>
-                                            </li>
+                                                <a>{{ user }}</a>
                                         {% empty %}
                                             <p>No Users</p>
                                         {% endfor %}
-                                    </ul>
                                 </div>
                             </div>
                         </div>

@@ -11,8 +11,7 @@ django.setup()
 
 print('[+] Set up environment')
 
-# from yourapp.models import your_model
-# from account.models import Person
+from django.contrib.auth.models import User
 from questions.models import Question, Tag
 from django.contrib.auth.models import User
 from faker import Faker
@@ -35,17 +34,14 @@ for i in range(20):
         pass
 
 for i in range(100):
-    # us = User.objects.create_user(username='user_{}'.format(i), password='pass')
-    # us.save()
-    # print('[+] Created user {}'.format(us.username))
-    # cred = fake.name().split()
-    # person = Person.objects.create(name=cred[0], surname=cred[1], nickname=fake.user_name(),
-    #                                user=us)
-    # person.save()
-    # print('[+] Created person {}'.format(person.nickname))
+    us = User.objects.create_user(username='user_{}'.format(i), password='pass')
+    us.save()
+    print('[+] Created user {}'.format(us.username))
 
+for i in range(100):
     q = Question.objects.create(title=fake.sentence(),
-                                text=' '.join(fake.sentences()), rating=randint(0, 20), author=admin)
+                                text=' '.join(fake.sentences()), rating=randint(0, 20),
+                                author=list(User.objects.all())[randint(0, len(User.objects.all())-1)])
 
     taglist = []
 
