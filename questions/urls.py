@@ -8,5 +8,6 @@ urlpatterns = [
     path('create/', views.QuestionCreateView.as_view(), name='question_create'),
     path('rate_question/', views.rate_question, name='rate_question'),
     path('rate_answer/', views.rate_answer, name='rate_answer'),
+    path('update_answers/', views.update_answers, name='update_answers')
 
 ]

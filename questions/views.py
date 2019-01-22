@@ -1,18 +1,19 @@
-import jwt
+from django.shortcuts import render
+
+from ask_me_tech_park import settings
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import FormView, FormMixin
-from faker import Faker
 from django.http import HttpResponse
-
 from django.db import transaction
-
 from .models import Question, Tag, Answer, QuestionCreationForm, AnswerForm, QuestionLike, AnswerLike
 
+from faker import Faker
 from cent import Client
+import jwt
 
 fake = Faker()
 
-cl = Client("http://127.0.0.1:8048/", "api_key", timeout=1)
+cl = Client(settings.CENTRIGUGO_URL, settings.CENTRIFUGO_API_KEY, timeout=settings.CENTRIFUGO_TIMEOUT)
 
 
 class QuestionListView(ListView):
@@ -21,11 +22,10 @@ class QuestionListView(ListView):
     model = Question
     context_object_name = 'question_list'
 
-    # ordering = 'title'
     paginate_by = 10
 
     def get_queryset(self):
-        return Question.objects.order_by('title')
+        return Question.objects.order_by('-date_time')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -33,8 +33,6 @@ class QuestionListView(ListView):
         if tag_name is not None:
             context['tag_query'] = tag_name
             context['question_list'] = Question.objects.filter(tags__text__exact=tag_name)
-        # else:
-        #     context['question_list'] = Question.objects.all()
         context['tag_list'] = Tag.objects.all()
         return context
 
@@ -63,14 +61,17 @@ class QuestionDetailView(DetailView, FormMixin):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-        context['tag_list'] = Tag.objects.all()
-        # token = jwt.encode({"sub": str(self.request.user.id)}, "dd835d28-6e32-4ba3-81b2-547cecdb0dbb").decode()
-        # context['token'] = token
+        token = jwt.encode({"sub": str(self.request.user.id)}, settings.CENTRIGUGO_SECRET).decode()
+        context['token'] = token
         return context
 
     def form_valid(self, form):
         answer = Answer.answer_question(self.object, self.request.user, form.cleaned_data['text'])
         answer.save()
+        cl.publish("question_" + str(self.object.id), {"message":
+                                                           {"author": answer.author.id,
+                                                            "text": answer.text}
+                                                       })
         return super(QuestionDetailView, self).form_valid(form)
 
     def get_success_url(self):
@@ -83,6 +84,9 @@ class QuestionDetailView(DetailView, FormMixin):
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
+
+    def get(self, request, *args, **kwargs):
+        return super().get(request, args, kwargs)
 
 
 class QuestionCreateView(FormView):
@@ -98,6 +102,8 @@ class QuestionCreateView(FormView):
         question.rating = 0
         question.save()
         self.success_url = question.get_absolute_url()
+
+        cl.publish("news", {"message": "NEW QUESTION"})
 
         return super(QuestionCreateView, self).form_valid(form)
 
@@ -124,10 +130,8 @@ def rate_question(request):
 
 @transaction.atomic
 def rate_answer(request):
-    # cl.publish("news", {"hello": "world"})
     answer_id = int(request.POST['id'])
     value = int(request.POST['value'])
-    # cl.publish("news", {"hello": "world"})
     _answer = Answer.objects.get(id=answer_id)
     _user = request.user
     try:
@@ -141,5 +145,10 @@ def rate_answer(request):
         _answer.save()
         AnswerLike.objects.create(answer=_answer, user=_user)
         return HttpResponse(_answer.rating, status=200)
+
+
+def update_answers(request):
+    context = {"question": Question.objects.get(id=int(request.GET.get("question_id")))}
+    return render(request, 'answers.html', context)
 
 # TODO если проголосовал то делать кнопку неактивной

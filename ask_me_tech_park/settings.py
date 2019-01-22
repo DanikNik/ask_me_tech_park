@@ -140,3 +140,8 @@ STATIC_ROOT = "/home/daniknik/tech_park_web/ask_me_static"
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+CENTRIGUGO_SECRET = "dd835d28-6e32-4ba3-81b2-547cecdb0dbb"
+CENTRIFUGO_API_KEY = "api_key"
+CENTRIFUGO_TIMEOUT = 1
+CENTRIGUGO_URL = 'http://127.0.0.1:8048'

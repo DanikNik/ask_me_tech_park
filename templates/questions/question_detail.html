@@ -11,24 +11,26 @@
             <button class="btn btn-dark">Answer</button>
         </form>
     {% endif %}
-    {% for answer in question.answer_set.all %}
-        {% include 'answer.html' %}
-    {% empty %}
-        <h3>No answers yet. Be First!</h3>
-    {% endfor %}
+    <div id="answer_list">
+      {% include 'answers.html' %}
+    </div>
+
 {% endblock %}
 
 {% block javascript %}
-{#    <script src="{% static "js/centrifuge.min.js" %}"></script>#}
-{#    <script>#}
-{#        $(function () {#}
-{#            var cent = new Centrifuge('ws://askme.daniknik:8048/connection/websocket');#}
-{#            cent.setToken('{{ token }}');#}
-{#            var channel = "news";#}
-{#            cent.subscribe(channel, function (msg) {#}
-{#                alert(msg.data['hello'])#}
-{#            });#}
-{#            cent.connect()#}
-{#        })#}
-{#    </script>#}
+    {#    <script src="{% static "js/centrifuge.min.js" %}"></script>#}
+    <script src="https://cdn.rawgit.com/centrifugal/centrifuge-js/2.0.0/dist/centrifuge.min.js"></script>
+    <script>
+        {#var Centrifuge = require("centrifuge");#}
+        $(function () {
+            var cent = new Centrifuge('ws://askme.daniknik:8048/connection/websocket');
+            cent.setToken('{{ token }}');
+            var channel = "question_" + '{{ question.id }}';
+            cent.subscribe(channel, function (msg) {
+                $('#answer_list').load("{% url 'update_answers' %}?question_id=" + "{{ question.id }}");
+                $('body, html').scrollTop($(document).height());
+            });
+            cent.connect();
+        });
+    </script>
 {% endblock %}

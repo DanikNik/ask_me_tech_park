@@ -17,12 +17,12 @@ server{
 
 
     location /static/ {
-        alias /home/daniknik/tech_park_web/ask_me_tech_park/static/;
+        alias /home/daniknik/tech_park_web/ask_me_static/;
         expires 3d;
     }
 
     location /media/ {
-        alias /home/daniknik/tech_park_web/ask_me_tech_park/media/;
+        alias /home/daniknik/tech_park_web/ask_me_media/;
         expires 3d;
     }
 
