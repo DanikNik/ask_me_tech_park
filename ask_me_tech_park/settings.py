@@ -25,8 +25,12 @@ SECRET_KEY = '#7tef*i!xf4j%@z50supo^r#o13a3mws@l5jydetz6#$wtbw8j'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'ask.me',
-    'www.ask.me',
+    'askme.daniknik',
+    'www.askme.daniknik',
+    'localhost',
+    '127.0.0.1',
+    '0.0.0.0',
+
 ]
 
 # Application definition

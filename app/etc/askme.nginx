@@ -13,7 +13,7 @@ proxy_cache_path /home/daniknik/tech_park_web/nginx_cache/
 
 server{
     listen 81;
-    server_name ask.me;
+    server_name askme.daniknik;
 
 
     location /static/ {
@@ -33,6 +33,10 @@ server{
 
         proxy_pass http://askme_server;
     }
+
+    location ~* \.(eot|otf|ttf|woff|woff2)$ {
+        add_header Access-Control-Allow-Origin *;
+    }
 }
 
 server{
@@ -41,7 +45,7 @@ server{
 
 
     location / {
-        proxy_pass http://ask.me:81;
+        proxy_pass http://askme.daniknik:81;
 
         proxy_cache askme_cache;
         proxy_cache_valid 1h;

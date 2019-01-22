@@ -18,3 +18,17 @@
     {% endfor %}
 {% endblock %}
 
+{% block javascript %}
+{#    <script src="{% static "js/centrifuge.min.js" %}"></script>#}
+{#    <script>#}
+{#        $(function () {#}
+{#            var cent = new Centrifuge('ws://askme.daniknik:8048/connection/websocket');#}
+{#            cent.setToken('{{ token }}');#}
+{#            var channel = "news";#}
+{#            cent.subscribe(channel, function (msg) {#}
+{#                alert(msg.data['hello'])#}
+{#            });#}
+{#            cent.connect()#}
+{#        })#}
+{#    </script>#}
+{% endblock %}

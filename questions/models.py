@@ -8,21 +8,18 @@ from django import forms
 class Question(models.Model):
     title = models.CharField(max_length=100)
     text = models.TextField()
-    rating = models.IntegerField(null=True)
+    rating = models.IntegerField(default=0)
     author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     tags = models.ManyToManyField(to='Tag', related_name='questions')
     liked = models.ManyToManyField(to=User, related_name="liked_questions")
 
-    # date = models.DateTimeField(auto_created=True)
+    date_time = models.DateField(auto_now_add=True)
 
     def __str__(self):
         return self.title
 
     def get_absolute_url(self):
         return reverse('question_detail', args=[self.pk])
-
-    # def get_by_tag(self, tag):
-    #     return Question.objects.filter(tags__text__exact=tag)
 
 
 class Tag(models.Model):
@@ -34,10 +31,11 @@ class Tag(models.Model):
 
 class Answer(models.Model):
     text = models.TextField()
-    rating = models.IntegerField(null=True)
+    rating = models.IntegerField(default=0)
     author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     is_correct = models.BooleanField(default=False)
     question = models.ForeignKey('Question', null=True, on_delete=models.CASCADE)
+    date_time = models.DateTimeField(auto_now_add=True)
 
     @classmethod
     def answer_question(self, _question, _person, _text):

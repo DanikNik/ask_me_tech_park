@@ -1,3 +1,4 @@
+import jwt
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import FormView, FormMixin
 from faker import Faker
@@ -7,7 +8,11 @@ from django.db import transaction
 
 from .models import Question, Tag, Answer, QuestionCreationForm, AnswerForm, QuestionLike, AnswerLike
 
+from cent import Client
+
 fake = Faker()
+
+cl = Client("http://127.0.0.1:8048/", "api_key", timeout=1)
 
 
 class QuestionListView(ListView):
@@ -17,7 +22,7 @@ class QuestionListView(ListView):
     context_object_name = 'question_list'
 
     # ordering = 'title'
-    paginate_by = 8
+    paginate_by = 10
 
     def get_queryset(self):
         return Question.objects.order_by('title')
@@ -38,7 +43,7 @@ class QuestionByTagView(ListView):
     template_name = "questions/question_list.html"
     context_object_name = 'question_list'
 
-    paginate_by = 8
+    paginate_by = 10
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data()
@@ -59,6 +64,8 @@ class QuestionDetailView(DetailView, FormMixin):
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         context['tag_list'] = Tag.objects.all()
+        # token = jwt.encode({"sub": str(self.request.user.id)}, "dd835d28-6e32-4ba3-81b2-547cecdb0dbb").decode()
+        # context['token'] = token
         return context
 
     def form_valid(self, form):
@@ -117,8 +124,10 @@ def rate_question(request):
 
 @transaction.atomic
 def rate_answer(request):
+    # cl.publish("news", {"hello": "world"})
     answer_id = int(request.POST['id'])
     value = int(request.POST['value'])
+    # cl.publish("news", {"hello": "world"})
     _answer = Answer.objects.get(id=answer_id)
     _user = request.user
     try:

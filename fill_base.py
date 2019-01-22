@@ -45,7 +45,7 @@ for i in range(100):
     # print('[+] Created person {}'.format(person.nickname))
 
     q = Question.objects.create(title=fake.sentence(),
-                                text=' '.join(fake.sentences()), rating=randint(0, 20))
+                                text=' '.join(fake.sentences()), rating=randint(0, 20), author=admin)
 
     taglist = []
 
