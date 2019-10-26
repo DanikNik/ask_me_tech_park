@@ -1,47 +1,158 @@
+{% load question_cache %}
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    {% load static %}
     <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <meta charset="UTF-8">
     <title>{% block title %}Title {% endblock %}</title>
+    {% block style %}
+    {% endblock %}
 </head>
-<body>
-<nav class="navbar navbar-expand-xl navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">Expand at xl</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample06"
-            aria-controls="navbarsExample06" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+<body id="body">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'question_list' %}">AskMe</a>
+        <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarsExample07"
+                aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse collapse" id="navbarsExample07" style="">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="btn
+                    btn-outline-success" href="{% url 'question_create' %}"> ASK <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+            </ul>
 
-    <div class="collapse navbar-collapse" id="navbarsExample06">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link disabled" href="#">Disabled</a>
-            </li>
-            <li>
-                <form class="form-inline">
-                    <input class="form-control" type="text" placeholder="Search">
-                </form>
-            </li>
+            <form class="form-inline mx-1">
+                <input class="form-control" type="text" placeholder="Search" aria-label="Search">
+            </form>
 
-        </ul>
-        <div class="nav-item dropdown  my-2 my-md-0">
-            <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown06" data-toggle="dropdown"
-               aria-haspopup="true" aria-expanded="false">Dropdown</a>
-            <div class="dropdown-menu" aria-labelledby="dropdown06">
-                <a class="dropdown-item" href="#">Action</a>
-                <a class="dropdown-item" href="#">Another action</a>
-                <a class="dropdown-item" href="#">Something else here</a>
+            <div class="my-2 my-md-0" id="userBlock">
+                <ul class="navbar-nav mr-auto">
+                    {% if request.user.is_authenticated %}
+                        <li class="nav-item">
+                            <a href="{% url 'user_settings' %}" class="nav-link">{{ user.username }}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'logout' %}" class="nav-link">Logout</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a href="{% url 'register' %}" class="nav-link">Register</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'login' %}" class="nav-link">Login</a>
+                        </li>
+                    {% endif %}
+                </ul>
             </div>
         </div>
     </div>
 </nav>
+<div class="container-fluid">
+    <div class="container my-5">
+        {% csrf_token %}
+        {% block page_title %}{% endblock %}
+        <div class="row mt-3">
+            <div class="col-8">
+            {% block content %}
+            {% endblock %}
+        </div>
+            <div class="col-4">
+                {% block rightbar %}
+                    <div class="container-fluid sticky-top">
+                        <div class="card mb-2">
+                            <div class="card-header">
+                                <h3>Popular tags</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-text">
+                                    {% get_best_tags as best_tags %}
+                                    {% for tag in best_tags %}
+                                        <a href="{% url 'question_by_tag' tag %}">{{ tag }}</a>
+                                    {% empty %}
+                                        <p>No tags</p>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Best members</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-text">
+                                    {% get_best_users as best_users %}
+                                        {% for user in best_users %}
+                                                <a>{{ user }}</a>
+                                        {% empty %}
+                                            <p>No Users</p>
+                                        {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+<script>
+    function rateQuestion(id, value) {
+        let data = new FormData();
+        data.append('id', id);
+        data.append('value', value);
+        data.append('csrfmiddlewaretoken', document.getElementsByName('csrfmiddlewaretoken')[0].value);
+        const vote = document.getElementById('q-rating-' + id);
+        const like_button = document.getElementById('q-like-button-' + id);
+        const dislike_button = document.getElementById('q-dislike-button-' + id);
+        fetch('/rate_question/', {
+            method: 'POST',
+            body: data,
+            credentials: 'same-origin'
+        }).then(res => {
+            if (!res.ok) {
+                alert('You Liked This!');
+                return;
+            }
+            res.text().then(t => vote.innerHTML = t)
+            {#like_button.innerHTML = "";#}
+            {#dislike_button.innerHTML = "";#}
+        })
+    }
+
+    function rateAnswer(id, value) {
+        let data = new FormData();
+        data.append('id', id);
+        data.append('value', value);
+        data.append('csrfmiddlewaretoken', document.getElementsByName('csrfmiddlewaretoken')[0].value);
+        const vote = document.getElementById('a-rating-' + id);
+        fetch('/rate_answer/', {
+            method: 'POST',
+            body: data,
+            credentials: 'same-origin'
+        }).then(res => {
+            if (!res.ok) {
+                alert('You Liked this');
+                return;
+            }
+            res.text().then(t => vote.innerHTML = t)
+        })
+    }
+
+    function setCorrect(id) {
+    }
+</script>
+{% block javascript %}
+{% endblock %}
 </body>
 </html>

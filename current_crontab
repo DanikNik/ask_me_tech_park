@@ -1,0 +1,1 @@
+0 0,12 * * * /home/daniknik/tech_park_web/ask_me_tech_park/manage.py reload_cache

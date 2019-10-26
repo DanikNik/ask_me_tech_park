@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    {% include "question.html" %}
+    <br>
+    {% if request.user.is_authenticated %}
+        <form method="post" class="form-group">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="btn btn-dark">Answer</button>
+        </form>
+    {% endif %}
+    <div id="answer_list">
+      {% include 'answers.html' %}
+    </div>
+
+{% endblock %}
+
+{% block javascript %}
+    {#    <script src="{% static "js/centrifuge.min.js" %}"></script>#}
+    <script src="https://cdn.rawgit.com/centrifugal/centrifuge-js/2.0.0/dist/centrifuge.min.js"></script>
+    <script>
+        {#var Centrifuge = require("centrifuge");#}
+        $(function () {
+            var cent = new Centrifuge('ws://askme.daniknik:8048/connection/websocket');
+            cent.setToken('{{ token }}');
+            var channel = "question_" + '{{ question.id }}';
+            cent.subscribe(channel, function (msg) {
+                $('#answer_list').load("{% url 'update_answers' %}?question_id=" + "{{ question.id }}");
+                $('body, html').scrollTop($(document).height());
+            });
+            cent.connect();
+        });
+    </script>
+{% endblock %}

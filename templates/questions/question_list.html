@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block page_title %}
+    <h1>QUESTION LIST</h1>
+{% endblock %}
+
+
+{% block content %}
+    {% if question_list %}
+        {% for question in question_list %}
+
+            {% include "question.html" %}
+        {% endfor %}
+
+        {% include "paginator.html" %}
+
+    {% else %}
+        <h1>NO QUESTIONS AVAILABLE</h1>
+    {% endif %}
+{% endblock %}
+
