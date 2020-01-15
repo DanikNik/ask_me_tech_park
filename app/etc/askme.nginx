@@ -1,30 +1,9 @@
 upstream askme_server{
-    server 127.0.0.1:8080;
+    server askme:8080;
 }
 
-
-proxy_cache_path /home/daniknik/tech_park_web/nginx_cache/
-                    levels=1:2
-                    keys_zone=askme_cache:10m
-                    max_size=100m
-                    inactive=60m
-                    use_temp_path=off;
-
-
 server{
-    listen 81;
-    server_name askme.daniknik;
-
-
-    location /static/ {
-        alias /home/daniknik/tech_park_web/ask_me_static/;
-        expires 3d;
-    }
-
-    location /media/ {
-        alias /home/daniknik/tech_park_web/ask_me_media/;
-        expires 3d;
-    }
+    listen 80;
 
     location / {
         proxy_set_header Host $http_host;
@@ -36,25 +15,5 @@ server{
 
     location ~* \.(eot|otf|ttf|woff|woff2)$ {
         add_header Access-Control-Allow-Origin *;
-    }
-}
-
-server{
-
-    listen 80;
-
-
-    location / {
-        proxy_pass http://askme.daniknik:81;
-
-        proxy_cache askme_cache;
-        proxy_cache_valid 1h;
-
-        if ($http_cookie ~* ".+" ) {
-            set $do_not_cache 1;
-        }
-
-        proxy_cache_bypass $do_not_cache;
-
     }
 }

@@ -22,18 +22,24 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         if options['users'] is not None:
             for _ in range(options['users']):
-                _user = User.objects.create(username=fake.user_name(),
-                                            email=fake.email(),
-                                            first_name=fake.first_name(),
-                                            last_name=fake.last_name())
-                _user.save()
-                print('[+] Created user {}'.format(_user.username))
+                try:
+                    _user = User.objects.create(username=fake.user_name(),
+                                                email=fake.email(),
+                                                first_name=fake.first_name(),
+                                                last_name=fake.last_name())
+                    _user.save()
+                    print('[+] Created user {}'.format(_user.username))
+                except Exception:
+                    continue
 
         if options['tags'] is not None:
             for _ in range(options['tags']):
-                tag = Tag.objects.create(text=fake.word())
-                tag.save()
-                print('[+] Created tag {}'.format(tag.text))
+                try:
+                    tag = Tag.objects.create(text=fake.word())
+                    tag.save()
+                    print('[+] Created tag {}'.format(tag.text))
+                except Exception:
+                    continue
 
         if options['questions'] is not None:
             for _ in range(options['questions']):
@@ -55,7 +61,7 @@ class Command(BaseCommand):
         if options['answers'] is not None:
             for question in Question.objects.all():
                 for _ in range(options['answers']):
-                    rnd_user = randint(0, User.objects.count()-1)
+                    rnd_user = randint(0, User.objects.count() - 1)
                     answer = Answer.objects.create(author=list(User.objects.all())[rnd_user], text=fake.sentence())
                     answer.save()
                     question.answer_set.add(answer)

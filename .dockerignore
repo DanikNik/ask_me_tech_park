@@ -1,0 +1,11 @@
+start_nginx.sh
+stop_nginx.sh
+reload_nginx.sh
+migrate.sh
+server.sh
+fill_base.py
+db.sqlite3
+todo.md
+current_crontab
+Dockerfile
+.dockerignore

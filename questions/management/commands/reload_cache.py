@@ -27,12 +27,14 @@ class Command(BaseCommand):
             cache.set("cached_tags_num", 0)
             print("[+] Cached tags num {}".format(0))
         else:
+            count = 0
             for i in range(len(cached_tags_list)):
                 print("[+] Pushed tag {} in cache as tag_{}".format(cached_tags_list[i], i))
                 cache.set("tag_{}".format(i), cached_tags_list[i])
+                count = i
 
-            cache.set("cached_tags_num", i + 1)
-            print("[+] Cached tags num {}".format(i + 1))
+            cache.set("cached_tags_num", count + 1)
+            print("[+] Cached tags num {}".format(count + 1))
 
         print()
 
@@ -56,9 +58,11 @@ class Command(BaseCommand):
             cache.set("cached_users_num", i)
             print("[+] Cached users num {}".format(i))
         else:
+            count = 0
             for i in range(len(cached_users[:20])):
                 print("[+] Pushed user {} in cache as user_{}".format(cached_users[i], i))
                 cache.set("user_{}".format(i), cached_users[i])
+                count = i
 
-            cache.set("cached_users_num", i + 1)
-            print("[+] Cached users num {}".format(i + 1))
+            cache.set("cached_users_num", count + 1)
+            print("[+] Cached users num {}".format(count + 1))

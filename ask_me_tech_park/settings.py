@@ -62,7 +62,7 @@ MIDDLEWARE = [
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': '127.0.0.1:11211',
+        'LOCATION': 'localhost:11211',
     }
 }
 
@@ -134,9 +134,9 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
-    # '/var/www/static/',
+    # '//static/',
 ]
-STATIC_ROOT = "/home/daniknik/tech_park_web/ask_me_static"
+# STATIC_ROOT = "/home/daniknik/tech_park_web/ask_me_static"
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
