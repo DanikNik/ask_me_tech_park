@@ -18,7 +18,7 @@ Pillow
 prompt-toolkit==2.0.6
 ptyprocess==0.6.0
 Pygments==2.2.0
-PyJWT==1.7.1
+PyJWT==2.4.0
 python-dateutil==2.7.3
 python-memcached==1.59
 pytz==2018.5
